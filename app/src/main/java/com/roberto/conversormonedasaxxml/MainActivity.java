@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity
 {
     ArrayList<Moneda> monedas;
     Spinner spinOrigen, spinDestino;
+    EditText textoOrig;
+    EditText textoDest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,14 +41,14 @@ public class MainActivity extends AppCompatActivity
     private class CargarXmlTask extends AsyncTask<String, Void, Boolean>
     {
         @Override
-        protected Boolean doInBackground (String... p)
+        protected Boolean doInBackground (String... cadena)
         {
             //Se ejecuta este hilo para no esperar al fichero XML
 
-            MonedaParserSAX parser = new MonedaParserSAX(p[0]);
+            MonedaParserSAX parser = new MonedaParserSAX(cadena[0]);
             monedas = (ArrayList<Moneda>)parser.parse();
 
-            monedas.add(0,new Moneda("EUR",1f));
+            monedas.add(0, new Moneda("EUR", 1f));
 
             return true;
         }
@@ -64,21 +67,30 @@ public class MainActivity extends AppCompatActivity
             spinDestino.setAdapter(adaptador);
             spinDestino.setSelection(1);
 
-            spinOrigen.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener()
-            {
-                @Override
-                public void onItemSelected (AdapterView<?> parent, View view, int position, long id)
-                {
+            spinOrigen.setOnItemSelectedListener(
+                    new AdapterView.OnItemSelectedListener()
+                    {
+                        @Override
+                        public void onItemSelected (AdapterView<?> parent, View view, int pos, long id)
+                        {
+                            textoOrig = findViewById(R.id.origen_edit);
+                            textoDest = findViewById(R.id.destino_edit);
 
+                            textoOrig.setText("1");
+                            Moneda mon = (Moneda) parent.getItemAtPosition(pos);
+                            float value = (float) mon.getCambio();
 
-                }
+                            float exchange = value * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                            textoDest.setText(String.valueOf(exchange));
 
-                @Override
-                public void onNothingSelected (AdapterView<?> parent)
-                {
-                    Log.i("Info","No se seleccionó ninguna divisa");
-                }
-            });
+                        }
+
+                        @Override
+                        public void onNothingSelected (AdapterView<?> parent)
+                        {
+                            Log.i("Info","No se seleccionó ninguna divisa");
+                        }
+                    });
         }
     }
 }

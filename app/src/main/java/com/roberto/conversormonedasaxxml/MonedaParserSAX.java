@@ -18,7 +18,7 @@ public class MonedaParserSAX
 {
     private URL urlcambios;
 
-    public MonedaParserSAX(String url)
+    public MonedaParserSAX (String url)
     {
         try
         {
@@ -33,7 +33,6 @@ public class MonedaParserSAX
 
     public List<Moneda> parse()
     {
-        //Se obtiene una instancia para crear el parseador
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
         try
@@ -47,7 +46,8 @@ public class MonedaParserSAX
             //Vinculamos el fichero XML con el manejador, en este punto se invocan a todos
             //los metodos callback del manejador, construyendo el ArrayList de monedas
             parser.parse(this.getInputStream(), handler);
-            return handler.getListadomonedas();
+
+            return handler.getListadoMonedas();
         }
         catch (Exception e)
         {
@@ -68,28 +68,28 @@ public class MonedaParserSAX
     }
 
 
-    // Clase Manejador para leer el archivo XML de monedas del BCE
+    // Manejador para leer el XML de divisas del BCE
 
     private class ManejadorMonedasSAX extends DefaultHandler
     {
-        private ArrayList<Moneda> listadomonedas;
+        private ArrayList<Moneda> listadoMonedas;
         private Moneda moneda;
 
-        public ArrayList<Moneda> getListadomonedas()
+        public ArrayList<Moneda> getListadoMonedas()
         {
-            return listadomonedas;
+            return listadoMonedas;
         }
 
-        public void setListadomonedas(ArrayList<Moneda> listadomonedas)
+        public void setListadoMonedas(ArrayList<Moneda> listadoMonedas)
         {
-            this.listadomonedas = listadomonedas;
+            this.listadoMonedas = this.listadoMonedas;
         }
 
         @Override
         public void startDocument() throws SAXException
         {
             super.startDocument();
-            listadomonedas = new ArrayList<Moneda>();
+            listadoMonedas = new ArrayList<Moneda>();
         }
 
         @Override
@@ -97,10 +97,12 @@ public class MonedaParserSAX
         {
             super.startElement(uri, localName, qName, attributes);
 
-            if((localName.equals("Cube"))&&(attributes.getLength()==2))
+            if ((localName.equals("Cube")) && (attributes.getLength() == 2))
             {
-                //EStamos dentro de una moneda
-                listadomonedas.add(new Moneda(attributes.getValue("currency"),Float.parseFloat(attributes.getValue("rate"))));
+                //Leyendo una moneda
+                listadoMonedas.add(
+                        new Moneda(attributes.getValue("currency"), Float.parseFloat(attributes.getValue("rate")))
+                );
             }
         }
     }

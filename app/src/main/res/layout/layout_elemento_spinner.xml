@@ -7,12 +7,13 @@
 
     <TextView
         android:id="@+id/nombremoneda_text"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/moneda_imagen"
+        app:layout_constraintEnd_toStartOf="@+id/moneda_imagen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/moneda_imagen" />
 
@@ -20,12 +21,10 @@
         android:id="@+id/moneda_imagen"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nombremoneda_text"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
 </androidx.constraintlayout.widget.ConstraintLayout>
