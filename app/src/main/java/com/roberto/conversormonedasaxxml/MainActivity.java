@@ -18,10 +18,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
-    ArrayList<Moneda> monedas;
-    Spinner spinOrigen, spinDestino;
-    EditText textoOrig;
-    EditText textoDest;
+    private ArrayList<Moneda> monedas;
+    private Spinner spinOrigen, spinDestino;
+    private EditText textoOrig;
+    private EditText textoDest;
+
+    private float exchangeValueOri, rateOri;
+    private float exchangeValueDest, rateDest;
+    private float exchange;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,7 +37,10 @@ public class MainActivity extends AppCompatActivity
         CargarXmlTask tarea = new CargarXmlTask();
         tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
 
+        textoOrig = findViewById(R.id.origen_edit);
+        textoDest = findViewById(R.id.destino_edit);
 
+        textoOrig.setText("1");
 
 
 
@@ -67,22 +75,19 @@ public class MainActivity extends AppCompatActivity
             spinDestino.setAdapter(adaptador);
             spinDestino.setSelection(1);
 
-            spinOrigen.setOnItemSelectedListener(
+            spinDestino.setOnItemSelectedListener(
                     new AdapterView.OnItemSelectedListener()
                     {
                         @Override
                         public void onItemSelected (AdapterView<?> parent, View view, int pos, long id)
                         {
-                            textoOrig = findViewById(R.id.origen_edit);
-                            textoDest = findViewById(R.id.destino_edit);
-
-                            textoOrig.setText("1");
                             Moneda mon = (Moneda) parent.getItemAtPosition(pos);
-                            float value = (float) mon.getCambio();
+                            exchangeValueDest = mon.getCambio();
 
-                            float exchange = value * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                            rateDest = mon.getCambio() / exchangeValueOri;
+
+                            exchange = rateDest * Float.parseFloat(String.valueOf(textoOrig.getText()));
                             textoDest.setText(String.valueOf(exchange));
-
                         }
 
                         @Override
@@ -91,6 +96,28 @@ public class MainActivity extends AppCompatActivity
                             Log.i("Info","No se seleccionó ninguna divisa");
                         }
                     });
+
+            spinOrigen.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener()
+                {
+                    @Override
+                    public void onItemSelected (AdapterView<?> parent, View view, int pos, long id)
+                    {
+                        Moneda mon = (Moneda) parent.getItemAtPosition(pos);
+                        exchangeValueOri = mon.getCambio();
+
+                        rateOri = exchangeValueDest / mon.getCambio();
+
+                        exchange = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                        textoDest.setText(String.valueOf(exchange));
+                    }
+
+                    @Override
+                    public void onNothingSelected (AdapterView<?> parent)
+                    {
+                        Log.i("Info","No se seleccionó ninguna divisa");
+                    }
+                });
         }
     }
 }
