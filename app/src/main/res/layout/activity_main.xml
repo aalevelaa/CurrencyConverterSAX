@@ -4,36 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#646464"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/origen_edit"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/myToolbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@android:dimen/thumbnail_height"
-        android:ems="10"
-        android:hint="MONEDA ORIGEN"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/origen_spinner"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/origen_edit"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginRight="96dp"
+        android:ems="10"
+        android:hint="MONEDA ORIGEN"
+        android:inputType="numberDecimal"
+        android:textColor="@color/textLight"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textColorHint="@color/textDark"
+        android:textColorLink="@color/colorPrimary"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myToolbar" />
+
     <Spinner
         android:id="@+id/origen_spinner"
+        style="@android:style/Widget.Holo.Light.Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/origen_edit"
+        android:layout_marginTop="142dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/origen_edit"
-        app:layout_constraintTop_toTopOf="@+id/origen_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/myToolbar" />
 
     <EditText
         android:id="@+id/destino_edit"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@android:dimen/notification_large_icon_height"
+        android:layout_marginEnd="96dp"
+        android:layout_marginRight="96dp"
         android:clickable="false"
         android:cursorVisible="false"
         android:editable="false"
@@ -41,18 +63,49 @@
         android:enabled="false"
         android:hint="MONEDA DESTINO"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/destino_spinner"
+        android:textColor="@color/textLight"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textColorHint="@color/textDark"
+        android:textColorLink="@color/colorPrimary"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/origen_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/origen_edit"
+        app:layout_constraintVertical_bias="0.3" />
 
     <Spinner
         android:id="@+id/destino_spinner"
+        style="@android:style/Widget.Holo.Light.Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/destino_edit"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/destino_edit"
-        app:layout_constraintTop_toTopOf="@+id/destino_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/origen_spinner"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <Button
+        android:id="@+id/buttonSwitch"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
+        android:layout_marginBottom="16dp"
+        android:text="⥯"
+        android:textColor="@color/colorPrimary"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textColorLink="@color/colorAccent"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/destino_spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/origen_spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,15 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/layoutDark">
 
     <TextView
         android:id="@+id/nombremoneda_text"
-        android:layout_width="40dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:background="#00969696"
         android:text="TextView"
+        android:textColor="@color/textLight"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/moneda_imagen"
         app:layout_constraintEnd_toStartOf="@+id/moneda_imagen"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,8 +23,8 @@
 
     <ImageView
         android:id="@+id/moneda_imagen"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"

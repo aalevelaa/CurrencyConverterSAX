@@ -1,18 +1,21 @@
 package com.roberto.conversormonedasaxxml;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import android.graphics.Color;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,9 +26,12 @@ public class MainActivity extends AppCompatActivity
     private EditText textoOrig;
     private EditText textoDest;
 
+    private Button bSwitch;
+
+    private int posOrigen, posDestino;
     private float exchangeValueOri, rateOri;
     private float exchangeValueDest, rateDest;
-    private float exchange;
+    private float finalValue;
 
 
     @Override
@@ -34,16 +40,23 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setSupportActionBar((Toolbar)findViewById(R.id.myToolbar));
+
         CargarXmlTask tarea = new CargarXmlTask();
         tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
 
         textoOrig = findViewById(R.id.origen_edit);
         textoDest = findViewById(R.id.destino_edit);
 
+        bSwitch = findViewById(R.id.buttonSwitch);
+
         textoOrig.setText("1");
+    }
 
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.switch_menu, menu);
+        return true;
     }
 
     private class CargarXmlTask extends AsyncTask<String, Void, Boolean>
@@ -54,7 +67,7 @@ public class MainActivity extends AppCompatActivity
             //Se ejecuta este hilo para no esperar al fichero XML
 
             MonedaParserSAX parser = new MonedaParserSAX(cadena[0]);
-            monedas = (ArrayList<Moneda>)parser.parse();
+            monedas = parser.parse();
 
             monedas.add(0, new Moneda("EUR", 1f));
 
@@ -82,12 +95,13 @@ public class MainActivity extends AppCompatActivity
                         public void onItemSelected (AdapterView<?> parent, View view, int pos, long id)
                         {
                             Moneda mon = (Moneda) parent.getItemAtPosition(pos);
+                            posDestino = pos;
                             exchangeValueDest = mon.getCambio();
 
                             rateDest = mon.getCambio() / exchangeValueOri;
 
-                            exchange = rateDest * Float.parseFloat(String.valueOf(textoOrig.getText()));
-                            textoDest.setText(String.valueOf(exchange));
+                            finalValue = rateDest * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                            textoDest.setText(String.valueOf(finalValue));
                         }
 
                         @Override
@@ -104,12 +118,13 @@ public class MainActivity extends AppCompatActivity
                     public void onItemSelected (AdapterView<?> parent, View view, int pos, long id)
                     {
                         Moneda mon = (Moneda) parent.getItemAtPosition(pos);
+                        posOrigen = pos;
                         exchangeValueOri = mon.getCambio();
 
                         rateOri = exchangeValueDest / mon.getCambio();
 
-                        exchange = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
-                        textoDest.setText(String.valueOf(exchange));
+                        finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                        textoDest.setText(String.valueOf(finalValue));
                     }
 
                     @Override
@@ -118,6 +133,42 @@ public class MainActivity extends AppCompatActivity
                         Log.i("Info","No se seleccionó ninguna divisa");
                     }
                 });
+
+
+            bSwitch.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    spinOrigen.setSelection(posDestino);
+                    spinDestino.setSelection(posOrigen);
+                }
+            });
+
+            textoOrig.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count)
+                {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s)
+                {
+                    Moneda m1 = (Moneda) spinOrigen.getSelectedItem();
+                    Moneda m2 = (Moneda) spinDestino.getSelectedItem();
+
+                    rateOri = m1.getCambio() / m2.getCambio();
+
+                    finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                    textoDest.setText(String.valueOf(finalValue));
+                }
+            });
         }
     }
 }

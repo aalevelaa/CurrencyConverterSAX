@@ -31,7 +31,7 @@ public class MonedaParserSAX
         }
     }
 
-    public List<Moneda> parse()
+    public ArrayList<Moneda> parse()
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
@@ -73,7 +73,6 @@ public class MonedaParserSAX
     private class ManejadorMonedasSAX extends DefaultHandler
     {
         private ArrayList<Moneda> listadoMonedas;
-        private Moneda moneda;
 
         public ArrayList<Moneda> getListadoMonedas()
         {
@@ -82,7 +81,7 @@ public class MonedaParserSAX
 
         public void setListadoMonedas(ArrayList<Moneda> listadoMonedas)
         {
-            this.listadoMonedas = this.listadoMonedas;
+            this.listadoMonedas = listadoMonedas;
         }
 
         @Override
@@ -100,9 +99,7 @@ public class MonedaParserSAX
             if ((localName.equals("Cube")) && (attributes.getLength() == 2))
             {
                 //Leyendo una moneda
-                listadoMonedas.add(
-                        new Moneda(attributes.getValue("currency"), Float.parseFloat(attributes.getValue("rate")))
-                );
+                listadoMonedas.add(new Moneda(attributes.getValue("currency"), Float.parseFloat(attributes.getValue("rate"))));
             }
         }
     }
