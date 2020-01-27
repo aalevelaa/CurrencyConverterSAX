@@ -170,8 +170,17 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v)
                 {
-                    spinOrigen.setSelection(posDestino);
-                    spinDestino.setSelection(posOrigen);
+                    if (textoOrig.getText().length() >= 1)
+                    {
+                        spinOrigen.setSelection(posDestino);
+                        spinDestino.setSelection(posOrigen);
+                    }
+                    else
+                    {
+                        textoOrig.setText("1");
+                        spinOrigen.setSelection(posDestino);
+                        spinDestino.setSelection(posOrigen);
+                    }
                 }
             });
 
@@ -189,10 +198,17 @@ public class MainActivity extends AppCompatActivity
                     Moneda m1 = (Moneda) spinOrigen.getSelectedItem();
                     Moneda m2 = (Moneda) spinDestino.getSelectedItem();
 
-                    rateOri = m2.getCambio() / m1.getCambio();
+                    if (textoOrig.getText().length() >= 1)
+                    {
+                        rateOri = m2.getCambio() / m1.getCambio();
 
-                    finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
-                    textoDest.setText(String.valueOf(finalValue));
+                        finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                        textoDest.setText(String.valueOf(finalValue));
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
             });
         }
