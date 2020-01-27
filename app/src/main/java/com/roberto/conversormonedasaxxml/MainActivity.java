@@ -2,8 +2,10 @@ package com.roberto.conversormonedasaxxml;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,11 +13,14 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
 
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -23,10 +28,11 @@ public class MainActivity extends AppCompatActivity
 {
     private ArrayList<Moneda> monedas;
     private Spinner spinOrigen, spinDestino;
-    private EditText textoOrig;
-    private EditText textoDest;
+    private EditText textoOrig, textoDest;
+    private TextView tvDom, tvSax;
 
-    private Button bSwitch;
+    private Button switchCurrency;
+    private Switch switchDOMSAX;
 
     private int posOrigen, posDestino;
     private float exchangeValueOri, rateOri;
@@ -48,9 +54,33 @@ public class MainActivity extends AppCompatActivity
         textoOrig = findViewById(R.id.origen_edit);
         textoDest = findViewById(R.id.destino_edit);
 
-        bSwitch = findViewById(R.id.buttonSwitch);
+        switchCurrency = findViewById(R.id.buttonSwitch);
+        switchDOMSAX = findViewById(R.id.switch2);
+
+        tvSax = findViewById(R.id.tvSAX);
+        tvDom = findViewById(R.id.tvDOM);
 
         textoOrig.setText("1");
+
+        switchDOMSAX.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                Toolbar toolbar = findViewById(R.id.myToolbar);
+
+                if (buttonView.isChecked())
+                {
+                    toolbar.setBackgroundColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorSecondary));
+                    switchCurrency.setTextColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorSecondary));
+                }
+                else
+                {
+                    toolbar.setBackgroundColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
+                    switchCurrency.setTextColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
+                }
+            }
+        });
     }
 
     @Override
@@ -135,7 +165,7 @@ public class MainActivity extends AppCompatActivity
                 });
 
 
-            bSwitch.setOnClickListener(new View.OnClickListener()
+            switchCurrency.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -145,17 +175,13 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            textoOrig.addTextChangedListener(new TextWatcher() {
+            textoOrig.addTextChangedListener(new TextWatcher()
+            {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after)
-                {
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count)
-                {
-
-                }
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
                 @Override
                 public void afterTextChanged(Editable s)
@@ -163,7 +189,7 @@ public class MainActivity extends AppCompatActivity
                     Moneda m1 = (Moneda) spinOrigen.getSelectedItem();
                     Moneda m2 = (Moneda) spinDestino.getSelectedItem();
 
-                    rateOri = m1.getCambio() / m2.getCambio();
+                    rateOri = m2.getCambio() / m1.getCambio();
 
                     finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
                     textoDest.setText(String.valueOf(finalValue));
