@@ -54,12 +54,14 @@ public class MonedaParserDOM
         }
     }
 
-    public ArrayList<Moneda> recorrerDOM()
+    public ArrayList<Moneda> parse()
     {
-        ArrayList<Moneda> listadoMonedas = null;
+        ArrayList<Moneda> listadoMonedas = new ArrayList<Moneda>();
 
         String datos_nodo[] = null;
         Node node;
+
+        abrirDOM();
 
         Node raiz = doc.getFirstChild();
         NodeList nodelist = raiz.getChildNodes();

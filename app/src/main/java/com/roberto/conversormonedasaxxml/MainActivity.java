@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.AdapterView;
@@ -48,46 +49,55 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar((Toolbar)findViewById(R.id.myToolbar));
 
-        CargarXmlTask tarea = new CargarXmlTask();
-        tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
-
         textoOrig = findViewById(R.id.origen_edit);
         textoDest = findViewById(R.id.destino_edit);
 
         switchCurrency = findViewById(R.id.buttonSwitch);
-        switchDOMSAX = findViewById(R.id.switch2);
 
         tvSax = findViewById(R.id.tvSAX);
         tvDom = findViewById(R.id.tvDOM);
 
         textoOrig.setText("1");
 
-        switchDOMSAX.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                Toolbar toolbar = findViewById(R.id.myToolbar);
 
-                if (buttonView.isChecked())
-                {
-                    toolbar.setBackgroundColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorSecondary));
-                    switchCurrency.setTextColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorSecondary));
-                }
-                else
-                {
-                    toolbar.setBackgroundColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
-                    switchCurrency.setTextColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
-                }
-            }
-        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.switch_menu, menu);
+
+        this.switchDOMSAX = menu.findItem(R.id.app_bar_switch).getActionView().findViewById(R.id.switch1);
+
+        this.switchDOMSAX.setOnCheckedChangeListener(
+                new Switch.OnCheckedChangeListener(){
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        Toolbar toolbar = findViewById(R.id.myToolbar);
+
+                        if (isChecked)
+                        {
+                            toolbar.setTitle("Convirtiendo DOM");
+                            toolbar.setBackgroundColor(ContextCompat.getColor( switchDOMSAX.getContext(), R.color.colorSecondary));
+                            switchCurrency.setTextColor(ContextCompat.getColor( switchDOMSAX.getContext(), R.color.colorSecondary));
+
+                            CargarXmlTask tarea = new CargarXmlTask();
+                            tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "DOM");
+                        }
+                        else
+                        {
+                            toolbar.setTitle("Convirtiendo SAX");
+                            toolbar.setBackgroundColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
+                            switchCurrency.setTextColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
+
+                            CargarXmlTask tarea = new CargarXmlTask();
+                            tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "SAX");
+                        }
+                    }
+                }
+        );
         return true;
     }
+
 
     private class CargarXmlTask extends AsyncTask<String, Void, Boolean>
     {
@@ -95,9 +105,17 @@ public class MainActivity extends AppCompatActivity
         protected Boolean doInBackground (String... cadena)
         {
             //Se ejecuta este hilo para no esperar al fichero XML
-
-            MonedaParserSAX parser = new MonedaParserSAX(cadena[0]);
-            monedas = parser.parse();
+            switch (cadena[1])
+            {
+                case "SAX":
+                    MonedaParserSAX parser = new MonedaParserSAX(cadena[0]);
+                    monedas = parser.parse();
+                    break;
+                case "DOM":
+                    MonedaParserDOM parse = new MonedaParserDOM(cadena[0]);
+                    monedas = parse.parse();
+                    break;
+            }
 
             monedas.add(0, new Moneda("EUR", 1f));
 
