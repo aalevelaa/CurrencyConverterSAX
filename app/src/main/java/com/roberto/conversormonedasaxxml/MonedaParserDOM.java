@@ -41,8 +41,8 @@ public class MonedaParserDOM
 
             DocumentBuilder builder = factory.newDocumentBuilder();
 
-
             doc = builder.parse(urlcambios.openStream());
+            doc.getDocumentElement().normalize();
 
             return 0;
 
@@ -58,22 +58,22 @@ public class MonedaParserDOM
     {
         ArrayList<Moneda> listadoMonedas = new ArrayList<Moneda>();
 
-        String datos_nodo[] = null;
+        String atributosNodo[] = null;
         Node node;
 
         abrirDOM();
 
-        Node raiz = doc.getFirstChild();
-        NodeList nodelist = raiz.getChildNodes();
+        NodeList nodelist = doc.getElementsByTagName("Cube");
 
         for (int i = 0; i < nodelist.getLength(); i++)
         {
             Moneda moneda = null;
             node = nodelist.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE)
+
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getAttributes().getLength() == 2)
             {
-                datos_nodo = procesarMoneda(node);
-                moneda = new Moneda(datos_nodo[0], Float.parseFloat(datos_nodo[1]));
+                atributosNodo = procesarMoneda(node);
+                moneda = new Moneda(atributosNodo[0], Float.parseFloat(atributosNodo[1]));
             }
             listadoMonedas.add(moneda);
         }
@@ -83,24 +83,26 @@ public class MonedaParserDOM
 
     protected String[] procesarMoneda(Node n)
     {
-        String datos[] = new String[3];
+        String atributos[] = new String[2];
         Node ntemp = null;
         int contador = 1;
 
-        datos[0] = n.getAttributes().item(0).getNodeValue();
+        atributos[0] = n.getAttributes().item(0).getNodeValue();
+        atributos[1] = n.getAttributes().item(1).getNodeValue();
 
         NodeList nodos = n.getChildNodes();
+
         for (int i = 0; i < nodos.getLength(); i++)
         {
             ntemp = nodos.item(i);
 
             if (ntemp.getNodeType() == Node.ELEMENT_NODE)
             {
-                datos[contador] = ntemp.getChildNodes().item(0).getNodeValue();
+                atributos[contador] = ntemp.getChildNodes().item(0).getNodeValue();
                 contador++;
             }
         }
 
-        return datos;
+        return atributos;
     }
 }

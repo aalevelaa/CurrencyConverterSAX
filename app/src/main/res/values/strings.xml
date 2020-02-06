@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Conversor de Divisas</string>
+    <string name="xml_url">https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml</string>
+    <string name="moneda_origen">MONEDA ORIGEN</string>
+    <string name="moneda_destino">MONEDA DESTINO</string>
+    <string name="modo_dom">Convirtiendo DOM</string>
+    <string name="modo_sax">Convirtiendo SAX</string>
+
 </resources>

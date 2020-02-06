@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,6 +58,10 @@ public class MainActivity extends AppCompatActivity
         tvSax = findViewById(R.id.tvSAX);
         tvDom = findViewById(R.id.tvDOM);
 
+
+        CargarXmlTask tarea = new CargarXmlTask();
+        tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "SAX");
+
         textoOrig.setText("1");
 
 
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
                         if (isChecked)
                         {
-                            toolbar.setTitle("Convirtiendo DOM");
+                            toolbar.setTitle("Convertidor de divisas [ DOM ]");
                             toolbar.setBackgroundColor(ContextCompat.getColor( switchDOMSAX.getContext(), R.color.colorSecondary));
                             switchCurrency.setTextColor(ContextCompat.getColor( switchDOMSAX.getContext(), R.color.colorSecondary));
 
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         else
                         {
-                            toolbar.setTitle("Convirtiendo SAX");
+                            toolbar.setTitle("Convertidor de divisas [ SAX ]");
                             toolbar.setBackgroundColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
                             switchCurrency.setTextColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
 
