@@ -86,9 +86,8 @@ public class AdaptadorSpinner extends ArrayAdapter<Moneda>
         TextView t = convertView.findViewById(R.id.nombremoneda_text);
         t.setText(this.m.get(position).getNombre());
 
-        //Cargar la imagen de internet??
         ImageView i = convertView.findViewById(R.id.moneda_imagen);
-        String p = "https://www.ecb.europa.eu/shared/img/flags/"+this.m.get(position).getNombre()+".gif";
+        String p = "https://www.ecb.europa.eu/shared/img/flags/" + this.m.get(position).getNombre() + ".gif";
 
         if (this.m.get(position).getNombre().equals("EUR"))
         {
@@ -103,7 +102,7 @@ public class AdaptadorSpinner extends ArrayAdapter<Moneda>
         return convertView;
     }
 
-    public void deshabilitar_elemento (int posicion)
+    public void deshabilitarElemento (int posicion)
     {
 
     }

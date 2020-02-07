@@ -66,11 +66,20 @@ public class MainActivity extends AppCompatActivity
 
         textoOrig.setText("1");
 
-
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        final Toolbar toolbar = findViewById(R.id.myToolbar);
+
+        final int colorTexto = ContextCompat.getColor( toolbar.getContext(), R.color.textLight);
+        final int colorPrimario = ContextCompat.getColor( toolbar.getContext(), R.color.colorPrimary);
+        final int colorSecundario = ContextCompat.getColor( toolbar.getContext(), R.color.colorSecondary);
+
+        toolbar.setTitle("Conversor [ SAX ]");
+        toolbar.setTitleTextColor(colorTexto);
+
         getMenuInflater().inflate(R.menu.switch_menu, menu);
 
         this.switchDOMSAX = menu.findItem(R.id.app_bar_switch).getActionView().findViewById(R.id.switch1);
@@ -79,25 +88,26 @@ public class MainActivity extends AppCompatActivity
                 new Switch.OnCheckedChangeListener(){
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        Toolbar toolbar = findViewById(R.id.myToolbar);
 
-                        if (isChecked)
+                        if (!isChecked)
                         {
-                            toolbar.setTitle("Convertidor de divisas [ DOM ]");
-                            toolbar.setBackgroundColor(ContextCompat.getColor( switchDOMSAX.getContext(), R.color.colorSecondary));
-                            switchCurrency.setTextColor(ContextCompat.getColor( switchDOMSAX.getContext(), R.color.colorSecondary));
-
-                            CargarXmlTask tarea = new CargarXmlTask();
-                            tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "DOM");
-                        }
-                        else
-                        {
-                            toolbar.setTitle("Convertidor de divisas [ SAX ]");
-                            toolbar.setBackgroundColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
-                            switchCurrency.setTextColor(ContextCompat.getColor(switchDOMSAX.getContext(), R.color.colorPrimary));
+                            toolbar.setTitle("Conversor [ SAX ]");
+                            toolbar.setTitleTextColor(colorTexto);
+                            toolbar.setBackgroundColor(colorPrimario);
+                            switchCurrency.setTextColor(colorPrimario);
 
                             CargarXmlTask tarea = new CargarXmlTask();
                             tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "SAX");
+                        }
+                        else
+                        {
+                            toolbar.setTitle("Conversor [ DOM ]");
+                            toolbar.setTitleTextColor(colorTexto);
+                            toolbar.setBackgroundColor(colorSecundario);
+                            switchCurrency.setTextColor(colorSecundario);
+
+                            CargarXmlTask tarea = new CargarXmlTask();
+                            tarea.execute("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml", "DOM");
                         }
                     }
                 }
@@ -150,6 +160,32 @@ public class MainActivity extends AppCompatActivity
             spinDestino.setAdapter(adaptador);
             spinDestino.setSelection(1);
 
+            spinOrigen.setOnItemSelectedListener(
+                    new AdapterView.OnItemSelectedListener()
+                    {
+                        @Override
+                        public void onItemSelected (AdapterView<?> parent, View view, int pos, long id)
+                        {
+                            Moneda mon = (Moneda) parent.getItemAtPosition(pos);
+                            posOrigen = pos;
+                            exchangeValueOri = mon.getCambio();
+
+                            rateOri = exchangeValueDest / mon.getCambio();
+
+                            finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
+                            textoDest.setText(String.valueOf(finalValue));
+
+                            posOrigen = pos;
+                        }
+
+                        @Override
+                        public void onNothingSelected (AdapterView<?> parent)
+                        {
+                            Log.i("Info","No se seleccionó ninguna divisa");
+                        }
+                    });
+
+
             spinDestino.setOnItemSelectedListener(
                     new AdapterView.OnItemSelectedListener()
                     {
@@ -164,6 +200,9 @@ public class MainActivity extends AppCompatActivity
 
                             finalValue = rateDest * Float.parseFloat(String.valueOf(textoOrig.getText()));
                             textoDest.setText(String.valueOf(finalValue));
+
+                            adaptador.deshabilitarElemento(posOrigen);
+
                         }
 
                         @Override
@@ -172,29 +211,6 @@ public class MainActivity extends AppCompatActivity
                             Log.i("Info","No se seleccionó ninguna divisa");
                         }
                     });
-
-            spinOrigen.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener()
-                {
-                    @Override
-                    public void onItemSelected (AdapterView<?> parent, View view, int pos, long id)
-                    {
-                        Moneda mon = (Moneda) parent.getItemAtPosition(pos);
-                        posOrigen = pos;
-                        exchangeValueOri = mon.getCambio();
-
-                        rateOri = exchangeValueDest / mon.getCambio();
-
-                        finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
-                        textoDest.setText(String.valueOf(finalValue));
-                    }
-
-                    @Override
-                    public void onNothingSelected (AdapterView<?> parent)
-                    {
-                        Log.i("Info","No se seleccionó ninguna divisa");
-                    }
-                });
 
 
             switchCurrency.setOnClickListener(new View.OnClickListener()

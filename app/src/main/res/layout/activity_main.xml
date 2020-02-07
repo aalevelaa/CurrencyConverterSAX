@@ -21,6 +21,7 @@
 
     <EditText
         android:id="@+id/origen_edit"
+        style="@android:style/Widget.EditText"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
@@ -29,8 +30,9 @@
         android:ems="10"
         android:hint="@string/moneda_origen"
         android:inputType="numberDecimal"
+        android:textCursorDrawable="@drawable/cursor"
         android:textColor="@color/textLight"
-        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textColorHighlight="@color/colorAccent"
         android:textColorHint="@color/textDark"
         android:textColorLink="@color/colorPrimary"
         android:textSize="24sp"
@@ -53,6 +55,7 @@
 
     <EditText
         android:id="@+id/destino_edit"
+        style="@android:style/Widget.EditText"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="96dp"
