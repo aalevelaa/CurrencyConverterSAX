@@ -1,6 +1,7 @@
 package com.roberto.conversormonedasaxxml;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -58,8 +59,8 @@ public class MonedaParserDOM
     {
         ArrayList<Moneda> listadoMonedas = new ArrayList<Moneda>();
 
-        String atributosNodo[] = null;
-        Node node;
+        String atributosNodo[] = new String[2];
+        Element e;
 
         abrirDOM();
 
@@ -68,41 +69,17 @@ public class MonedaParserDOM
         for (int i = 0; i < nodelist.getLength(); i++)
         {
             Moneda moneda = null;
-            node = nodelist.item(i);
+            e = (Element) nodelist.item(i);
 
-            if (node.getNodeType() == Node.ELEMENT_NODE && node.getAttributes().getLength() == 2)
+            if (e.getNodeType() == Node.ELEMENT_NODE && e.getAttributes().getLength() == 2)
             {
-                atributosNodo = procesarMoneda(node);
+                atributosNodo[0] = e.getAttribute("currency");
+                atributosNodo[1] = e.getAttribute("rate");
                 moneda = new Moneda(atributosNodo[0], Float.parseFloat(atributosNodo[1]));
+                listadoMonedas.add(moneda);
             }
-            listadoMonedas.add(moneda);
         }
-
         return listadoMonedas;
     }
 
-    protected String[] procesarMoneda(Node n)
-    {
-        String atributos[] = new String[2];
-        Node ntemp = null;
-        int contador = 1;
-
-        atributos[0] = n.getAttributes().item(0).getNodeValue();
-        atributos[1] = n.getAttributes().item(1).getNodeValue();
-
-        NodeList nodos = n.getChildNodes();
-
-        for (int i = 0; i < nodos.getLength(); i++)
-        {
-            ntemp = nodos.item(i);
-
-            if (ntemp.getNodeType() == Node.ELEMENT_NODE)
-            {
-                atributos[contador] = ntemp.getChildNodes().item(0).getNodeValue();
-                contador++;
-            }
-        }
-
-        return atributos;
-    }
 }
