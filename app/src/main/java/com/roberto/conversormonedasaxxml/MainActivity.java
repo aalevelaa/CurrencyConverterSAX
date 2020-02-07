@@ -154,10 +154,11 @@ public class MainActivity extends AppCompatActivity
 
             spinOrigen = findViewById(R.id.origen_spinner);
             spinDestino = findViewById(R.id.destino_spinner);
-            final AdaptadorSpinner adaptador = new AdaptadorSpinner(MainActivity.this, R.layout.layout_elemento_spinner, monedas);
+            AdaptadorSpinner adaptador1 = new AdaptadorSpinner(MainActivity.this, R.layout.layout_elemento_spinner, monedas);
+            AdaptadorSpinner adaptador2 = new AdaptadorSpinner(MainActivity.this, R.layout.layout_elemento_spinner, monedas);
 
-            spinOrigen.setAdapter(adaptador);
-            spinDestino.setAdapter(adaptador);
+            spinOrigen.setAdapter(adaptador1);
+            spinDestino.setAdapter(adaptador2);
             spinDestino.setSelection(1);
 
             spinOrigen.setOnItemSelectedListener(
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity
                             finalValue = rateOri * Float.parseFloat(String.valueOf(textoOrig.getText()));
                             textoDest.setText(String.valueOf(finalValue));
 
-                            posOrigen = pos;
+                            ((AdaptadorSpinner)spinDestino.getAdapter()).deshabilitarElemento(posOrigen);
                         }
 
                         @Override
@@ -201,8 +202,7 @@ public class MainActivity extends AppCompatActivity
                             finalValue = rateDest * Float.parseFloat(String.valueOf(textoOrig.getText()));
                             textoDest.setText(String.valueOf(finalValue));
 
-                            adaptador.deshabilitarElemento(posOrigen);
-
+                            ((AdaptadorSpinner)spinOrigen.getAdapter()).deshabilitarElemento(posDestino);
                         }
 
                         @Override
@@ -229,6 +229,9 @@ public class MainActivity extends AppCompatActivity
                         spinOrigen.setSelection(posDestino);
                         spinDestino.setSelection(posOrigen);
                     }
+
+                    ((AdaptadorSpinner)spinDestino.getAdapter()).deshabilitarElemento(posOrigen);
+                    ((AdaptadorSpinner)spinOrigen.getAdapter()).deshabilitarElemento(posDestino);
                 }
             });
 
