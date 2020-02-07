@@ -24,6 +24,8 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -109,15 +111,22 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground (String... cadena)
         {
+            URL url = null;
+            try {
+                url = new URL(cadena[0]);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException();
+            }
+
             //Se ejecuta este hilo para no esperar al fichero XML
             switch (cadena[1])
             {
                 case "SAX":
-                    MonedaParserSAX parser = new MonedaParserSAX(cadena[0]);
+                    MonedaParserSAX parser = new MonedaParserSAX(url);
                     monedas = parser.parse();
                     break;
                 case "DOM":
-                    MonedaParserDOM parse = new MonedaParserDOM(cadena[0]);
+                    MonedaParserDOM parse = new MonedaParserDOM(url);
                     monedas = parse.parse();
                     break;
             }

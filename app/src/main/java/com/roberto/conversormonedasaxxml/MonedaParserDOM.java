@@ -14,23 +14,20 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MonedaParserDOM
 {
-    private URL urlcambios;
+    private URL urlCambios;
     private Document doc;
 
-    public MonedaParserDOM(String url)
+    public MonedaParserDOM(URL url)
     {
-        try
-        {
-            //Se crea la URL del RECURSO
-            this.urlcambios = new URL(url);
-        }
-        catch (MalformedURLException e)
-        {
-            throw new RuntimeException(e);
-        }
+         this.urlCambios = url;
     }
 
-    public int abrirDOM()
+    public boolean comprobarURL ()
+    {
+        return true;
+    }
+
+    public boolean abrirDOM()
     {
         doc = null;
 
@@ -42,16 +39,15 @@ public class MonedaParserDOM
 
             DocumentBuilder builder = factory.newDocumentBuilder();
 
-            doc = builder.parse(urlcambios.openStream());
+            doc = builder.parse(urlCambios.openStream());
             doc.getDocumentElement().normalize();
 
-            return 0;
-
+            return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            return -1;
+            return false;
         }
     }
 

@@ -18,18 +18,12 @@ public class MonedaParserSAX
 {
     private URL urlcambios;
 
-    public MonedaParserSAX (String url)
+    public MonedaParserSAX (URL url)
     {
-        try
-        {
-            //Se crea la URL del RECURSO
-            this.urlcambios = new URL(url);
-        }
-        catch (MalformedURLException e)
-        {
-            throw new RuntimeException(e);
-        }
+        this.urlcambios = url;
     }
+
+
 
     public ArrayList<Moneda> parse()
     {
